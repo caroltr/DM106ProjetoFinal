@@ -88,9 +88,18 @@ namespace DM106ProjetoFinal.Controllers
 
             // Calcular preço total
             decimal precoTotal = 0;
+            
             foreach(OrderItem item in order.OrderItems)
             {
-                precoTotal += item.Product.Preco * item.Quantidade;
+                // precoTotal += item.Product.Preco * item.Quantidade;
+
+                Product p = db.Products.Where(i => i.Id == item.ProductId).FirstOrDefault();
+                if(p == null)
+                {
+                    return BadRequest("O item de ID = " + item.ProductId + " não existe.");
+                }
+
+                precoTotal += (p.Preco * item.Quantidade);
             }
             order.PrecoTotal = precoTotal;
 
